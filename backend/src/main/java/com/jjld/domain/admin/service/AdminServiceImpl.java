@@ -5,10 +5,12 @@ import com.jjld.domain.admin.dto.AdminReq;
 import com.jjld.domain.admin.dto.AdminRes;
 import com.jjld.domain.admin.dto.AdminSearchCondition;
 import com.jjld.domain.admin.entity.Admin;
+import com.jjld.domain.admin.entity.Enum.AdminRole;
 import com.jjld.domain.admin.specification.AdminSpecification;
 import com.jjld.global.exception.admin.AdminNotFoundException;
 import com.jjld.global.exception.admin.DuplicateAdminLoginIdException;
 import com.jjld.global.exception.admin.PasswordMismatchException;
+import com.jjld.global.exception.admin.SuperAdminOnlyException;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -85,5 +87,25 @@ public class AdminServiceImpl implements AdminService {
         Page<Admin> admins = adminDAO.getAdmins(spec, pageable);
         Page<AdminRes> response = admins.map(admin -> modelMapper.map(admin, AdminRes.class));
         return response;
+    }
+
+    @Override
+    public void updateAdminAuthority(Long adminId, Long targetAdminId, AdminRole adminRole) {
+        Admin superAdmin = adminDAO.getAdmin(adminId)
+                .orElseThrow(() -> new AdminNotFoundException());
+
+        if (
+                !(superAdmin.getAdminRole().equals(AdminRole.SUPER_ADMIN) ||
+                superAdmin.getAdminRole().equals(AdminRole.ACTING_ADMIN))
+        ) {
+            throw new SuperAdminOnlyException();
+        }
+
+        Admin targetAdmin = adminDAO.getAdmin(targetAdminId)
+                .orElseThrow(() -> new AdminNotFoundException());
+
+        targetAdmin.setAdminRole(adminRole);
+
+        adminDAO.updateAdminAuthority(targetAdmin);
     }
 }

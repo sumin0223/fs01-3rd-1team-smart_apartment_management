@@ -3,6 +3,7 @@ package com.jjld.domain.admin.controller;
 import com.jjld.domain.admin.dto.AdminReq;
 import com.jjld.domain.admin.dto.AdminRes;
 import com.jjld.domain.admin.dto.AdminSearchCondition;
+import com.jjld.domain.admin.entity.Enum.AdminRole;
 import com.jjld.domain.admin.service.AdminService;
 import com.jjld.global.response.ApiResponse;
 import jakarta.validation.Valid;
@@ -58,10 +59,12 @@ public class AdminController {
     //
 
     // 관리자 정보 수정
-    @PutMapping("/{adminId}/authority")
+    @PutMapping("/{adminId}/authority/{targetAdminId}")
     public ResponseEntity<?> updateAdminAuthority(
             @PathVariable("adminId") Long adminId,
-            @Valid @RequestBody AdminReq adminReq) {
-        return null;
+            @PathVariable("targetAdminId") Long targetAdminId,
+            @RequestParam AdminRole adminRole) {
+        adminService.updateAdminAuthority(adminId, targetAdminId, adminRole);
+        return ResponseEntity.ok(ApiResponse.success("권한 변경을 성공했습니다."));
     }
 }
