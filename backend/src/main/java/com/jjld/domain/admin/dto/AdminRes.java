@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 public class AdminRes {
     private Long adminId;
     private String adminLoginId;
-    private String adminPass;
     private String adminName;
     private String adminPhone;
     private String adminEmail;
