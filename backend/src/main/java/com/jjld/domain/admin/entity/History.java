@@ -28,6 +28,9 @@ public class History {
     @Column(nullable = false, length = 45)
     private String ipAddress;  // IPv4 + IPv6 고려해서 45 추천
 
+    @Column(nullable = false)
+    private Boolean success;
+
     @CreationTimestamp
     @Column(columnDefinition = "DATETIME")
     private LocalDateTime createdAt;  // 로그인 시각

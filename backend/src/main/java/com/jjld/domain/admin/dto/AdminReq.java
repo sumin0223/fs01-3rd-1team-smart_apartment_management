@@ -20,16 +20,8 @@ public class AdminReq {
     @Size(min = 8, message = "비밀번호는 8글자 이상이어야 합니다.")
     private String adminPass;
 
-    @NotBlank(message = "이름은 필수입니다.")
-    private String adminName;
-
-    @NotBlank(message = "전화번호는 필수입니다.")
-    @Pattern(regexp = "^\\d{11}$", message = "전화번호는 숫자 11자리여야 합니다.")
-    private String adminPhone;
-
-    @NotBlank(message = "이메일은 필수입니다.")
-    @Email(message = "올바른 이메일 형식이 아닙니다.")
-    private String adminEmail;
+    @NotBlank(message = "비밀번호 확인은 필수입니다.")
+    private String confirmPass;
 
     @NotNull(message = "권한 설정은 필수입니다.")
     private AdminRole adminRole;

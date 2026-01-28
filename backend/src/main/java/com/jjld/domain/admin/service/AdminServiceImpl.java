@@ -8,6 +8,8 @@ import com.jjld.domain.admin.entity.Admin;
 import com.jjld.domain.admin.specification.AdminSpecification;
 import com.jjld.global.exception.admin.AdminNotFoundException;
 import com.jjld.global.exception.admin.DuplicateAdminLoginIdException;
+import com.jjld.global.exception.admin.PasswordMismatchException;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -17,13 +19,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
 
+import static com.jjld.global.exception.ErrorCode.PASSWORD_MISMATCH;
+
 @Service
 @RequiredArgsConstructor
+@Builder
 public class AdminServiceImpl implements AdminService {
     private final AdminDAO adminDAO;
     private final ModelMapper modelMapper;
 
-    // adminId를 이용해 관리자 반환
+    // adminId를 이용해 관리자 조회
     @Override
     public AdminRes getAdmin(Long adminId) {
         Admin admin = adminDAO.getAdmin(adminId)
@@ -41,7 +46,17 @@ public class AdminServiceImpl implements AdminService {
             throw new DuplicateAdminLoginIdException();
         }
 
-        Admin admin = modelMapper.map(adminReq, Admin.class);
+        if (!adminReq.getAdminPass().equals(adminReq.getConfirmPass())) {
+            throw new PasswordMismatchException();
+        }
+
+        Admin admin = Admin.builder()
+                .adminLoginId(adminReq.getAdminLoginId())
+                .adminPass(adminReq.getAdminPass())
+                .state(false)
+                .adminRole(adminReq.getAdminRole())
+                .build();
+
         adminDAO.createAdmin(admin);
     }
 

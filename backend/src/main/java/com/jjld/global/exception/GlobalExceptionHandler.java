@@ -2,6 +2,7 @@ package com.jjld.global.exception;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.jjld.global.response.ApiResponse;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -57,6 +58,22 @@ public class GlobalExceptionHandler {
         // 하지만 고정 에러인 경우 .badRequest()쓴다고 함
         // -> 에러코드 enum 기반 = status()
         // -> 고정 에러 = badRequest()
+    }
+
+    // 잘못된 정렬 필드
+    @ExceptionHandler(PropertyReferenceException.class)
+    public ResponseEntity<ApiResponse<?>> handleSortError(PropertyReferenceException e) {
+        return ResponseEntity.badRequest().body(
+                ApiResponse.error("INVALID_SORT_FIELD", "존재하지 않는 정렬 필드입니다.")
+        );
+    }
+
+    // 잘못된 페이지 요청
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiResponse<?>> handlePageError(IllegalArgumentException e) {
+        return ResponseEntity.badRequest().body(
+                ApiResponse.error("INVALID_PAGE_REQUEST", "페이지 요청 값이 올바르지 않습니다.")
+        );
     }
 
     // 모든 예외의 마지막 처리

@@ -27,13 +27,13 @@ public class Admin {
     @Column(nullable = false)
     private String adminPass;  // 비밀번호
 
-    @Column(nullable = false, length = 50)
+    @Column(length = 50)
     private String adminName;  // 이름
 
-    @Column(nullable = false, length = 20)
+    @Column(length = 20)
     private String adminPhone;  // 전화번호
 
-    @Column(nullable = false, length = 100)
+    @Column(length = 100)
     private String adminEmail;  // 이메일
 
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
