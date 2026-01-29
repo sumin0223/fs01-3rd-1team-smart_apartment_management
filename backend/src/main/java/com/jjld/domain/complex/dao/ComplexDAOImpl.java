@@ -21,4 +21,9 @@ public class ComplexDAOImpl implements ComplexDAO {
     public void createComplex(Complex complex) {
         complexRepository.save(complex);
     }
+
+    @Override
+    public Optional<Complex> getComplex() {
+        return complexRepository.findTopByOrderByIdAsc();
+    }
 }

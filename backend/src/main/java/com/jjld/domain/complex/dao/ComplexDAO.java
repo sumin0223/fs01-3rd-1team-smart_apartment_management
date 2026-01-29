@@ -8,4 +8,6 @@ public interface ComplexDAO {
     Boolean existsComplex();
 
     void createComplex(Complex complex);
+
+    Optional<Complex> getComplex();
 }
