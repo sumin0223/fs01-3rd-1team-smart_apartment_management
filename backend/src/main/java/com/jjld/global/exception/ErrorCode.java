@@ -26,45 +26,46 @@ public enum ErrorCode {
     // 503 SERVICE_UNAVAILABLE --- 서버 일시적 장애 (서버 점검 중)
     // -----------------------------------------------------------------------------
 
-    // 공통
+    // -------- 공통 --------
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, "INVALID_REQUEST", "잘못된 요청입니다."),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR", "서버 오류가 발생했습니다."),
 
-    // Admin
+    // -------- Admin --------
     ADMIN_NOT_FOUND(HttpStatus.NOT_FOUND, "ADMIN_NOT_FOUND", "관리자를 찾을 수 없습니다."),
     DUPLICATE_ADMIN_LOGIN_ID(HttpStatus.CONFLICT, "DUPLICATE_ADMIN_LOGIN_ID", "이미 사용 중인 관리자 아이디입니다."),
-    PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, "PASSWORD_MISMATCH", "비밀번호가 일치하지 않습니다."),
+    PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, "PASSWORD_MISMATCH", "새 비밀번호와 비밀번호 확인이 일치하지 않습니다."),
     SUPER_ADMIN_ONLY(HttpStatus.FORBIDDEN, "SUPER_ADMIN_ONLY", "총 관리자만 접근할 수 있는 기능입니다."),
+    INVALID_CURRENT_PASSWORD(HttpStatus.UNAUTHORIZED, "INVALID_CURRENT_PASSWORD", "현재 비밀번호가 올바르지 않습니다."),
+    SAME_AS_OLD_PASSWORD(HttpStatus.BAD_REQUEST, "SAME_AS_OLD_PASSWORD", "새 비밀번호는 현재 비밀번호와 다르게 설정해야 합니다."),
 
-
-    // Alarm
+    // -------- Alarm --------
     ALARM_NOT_FOUND(HttpStatus.NOT_FOUND, "ALARM_NOT_FOUND", "알람을 찾을 수 없습니다."),
 
-    // CarGate
+    // -------- CarGate --------
     CAR_GATE_NOT_FOUND(HttpStatus.NOT_FOUND, "CAR_GATE_NOT_FOUND", "차량 출입구를 찾을 수 없습니다."),
 
-    // Complaint
+    // -------- Complaint --------
     COMPLAINT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMPLAINT_NOT_FOUND", "민원을 찾을 수 없습니다."),
 
-    // DoorGate
+    // -------- DoorGate --------
     DOOR_GATE_NOT_FOUND(HttpStatus.NOT_FOUND, "DOOR_GATE_NOT_FOUND", "공동 현관을 찾을 수 없습니다."),
 
-    // Elevator
+    // -------- Elevator --------
     ELEVATOR_NOT_FOUND(HttpStatus.NOT_FOUND, "ELEVATOR_NOT_FOUND", "엘리베이터를 찾을 수 없습니다."),
 
-    // Garden
+    // -------- Garden --------
     GARDEN_NOT_FOUND(HttpStatus.NOT_FOUND, "GARDEN_NOT_FOUND", "정원을 찾을 수 없습니다."),
 
-    // House
+    // -------- House --------
     HOUSE_NOT_FOUND(HttpStatus.NOT_FOUND, "HOUSE_NOT_FOUND", "세대를 찾을 수 없습니다."),
 
-    // Noise
+    // -------- Noise --------
     NOISE_NOT_FOUND(HttpStatus.NOT_FOUND, "NOISE_NOT_FOUND", "소음을 찾을 수 없습니다."),
 
-    // Notice
+    // -------- Notice --------
     NOTICE_NOT_FOUND(HttpStatus.NOT_FOUND, "NOTICE_NOT_FOUND", "공지 사항을 찾을 수 없습니다."),
 
-    // ParkingFee
+    // -------- ParkingFee --------
     PARKING_FEE_NOT_FOUND(HttpStatus.NOT_FOUND, "PARKING_FEE_NOT_FOUND", "주차 요금을 찾을 수 없습니다.");
 
     private final HttpStatus status;

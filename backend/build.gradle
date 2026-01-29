@@ -55,6 +55,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-integration'
     // Spring Integration MQTT
     implementation 'org.springframework.integration:spring-integration-mqtt'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 }
 
 

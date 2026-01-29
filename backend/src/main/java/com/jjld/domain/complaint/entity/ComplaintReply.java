@@ -28,9 +28,6 @@ public class ComplaintReply {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String answer;
 
-    @Column(columnDefinition = "TEXT")
-    private String aiAnswer;
-
     @CreationTimestamp
     @Column(columnDefinition = "DATETIME")
     private LocalDateTime repliedAt;

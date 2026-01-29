@@ -29,7 +29,10 @@ public class History {
     private String ipAddress;  // IPv4 + IPv6 고려해서 45 추천
 
     @Column(nullable = false)
-    private Boolean success;
+    private Boolean success;  // 로그인 성공 여부
+
+    @Column
+    private String message;  // 실패 시 이유
 
     @CreationTimestamp
     @Column(columnDefinition = "DATETIME")

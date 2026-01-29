@@ -41,10 +41,6 @@ public class House {
     private String householderPhone;
     private String householderEmail;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vehicle_id")
-    private RegisteredCar registeredCar;
-
     @Column(nullable = true, columnDefinition = "DATETIME")
     private LocalDate moveInAt;
 
@@ -53,7 +49,7 @@ public class House {
 
     private String appLoginPass;
 
-    @OneToMany(mappedBy = "house", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<NoiseSensor> noiseSensors = new ArrayList<>();
+    @OneToMany( mappedBy = "house", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RegisteredCar> registeredCars = new ArrayList<>();
 
 }

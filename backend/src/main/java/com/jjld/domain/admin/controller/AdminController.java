@@ -1,11 +1,10 @@
 package com.jjld.domain.admin.controller;
 
-import com.jjld.domain.admin.dto.AdminReq;
-import com.jjld.domain.admin.dto.AdminRes;
-import com.jjld.domain.admin.dto.AdminSearchCondition;
+import com.jjld.domain.admin.dto.*;
 import com.jjld.domain.admin.entity.Enum.AdminRole;
 import com.jjld.domain.admin.service.AdminService;
 import com.jjld.global.response.ApiResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -56,9 +55,7 @@ public class AdminController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
-    //
-
-    // 관리자 정보 수정
+    // 관리자 페이지에서 관리자 권한 수정
     @PutMapping("/{adminId}/authority/{targetAdminId}")
     public ResponseEntity<?> updateAdminAuthority(
             @PathVariable("adminId") Long adminId,
@@ -66,5 +63,26 @@ public class AdminController {
             @RequestParam AdminRole adminRole) {
         adminService.updateAdminAuthority(adminId, targetAdminId, adminRole);
         return ResponseEntity.ok(ApiResponse.success("권한 변경을 성공했습니다."));
+    }
+
+    // 마이페이지에서 관리자 정보 수정
+    @PutMapping("/{adminId}")
+    public ResponseEntity<?> updateAdmin(
+            @PathVariable Long adminId,
+            @Valid @RequestBody UpdateAdminReq updateAdminReq
+    ) {
+        adminService.updateAdmin(adminId, updateAdminReq);
+        return ResponseEntity.ok(ApiResponse.success("정보 수정을 성공했습니다."));
+    }
+
+    // 관리자 로그인
+    @PostMapping("/login")
+    public ResponseEntity<?> loginAdmin(
+            @Valid @RequestBody LoginAdminReq loginAdminReq,
+            HttpServletRequest servletRequest
+    ) {
+
+        LoginAdminRes response = adminService.loginAdmin(loginAdminReq, servletRequest);
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 }

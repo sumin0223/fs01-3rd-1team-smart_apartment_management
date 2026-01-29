@@ -24,4 +24,6 @@ public interface AdminDAO {
     Page<Admin> getAdmins(Specification<Admin> spec, Pageable pageable);
 
     void updateAdminAuthority(Admin targetAdmin);
+
+    void updateAdmin(Admin admin);
 }

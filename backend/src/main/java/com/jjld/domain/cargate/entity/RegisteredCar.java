@@ -23,7 +23,7 @@ public class RegisteredCar {
     @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle; // 차량 엔티티
 
-    @OneToOne
-    @JoinColumn(name = "house_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "house_id", nullable = false)
     private House house;
 }

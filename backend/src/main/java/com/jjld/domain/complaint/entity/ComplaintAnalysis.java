@@ -30,6 +30,10 @@ public class ComplaintAnalysis {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long analysisId;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "complaint_id", nullable = false)
+    private Complaint complaint;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private AnalysisPeriodType periodType;
@@ -42,6 +46,9 @@ public class ComplaintAnalysis {
 
     @Column(columnDefinition = "TEXT")
     private String summary;
+
+    @Column(columnDefinition = "TEXT")
+    private String analysis;
 
     @Column(nullable = false)
     @CreationTimestamp
