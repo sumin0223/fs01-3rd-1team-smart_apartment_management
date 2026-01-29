@@ -11,5 +11,4 @@ public class SuperAdminOnlyException extends BusinessException {
     public SuperAdminOnlyException(String message) {
         super(ErrorCode.SUPER_ADMIN_ONLY, message);
     }
-
 }

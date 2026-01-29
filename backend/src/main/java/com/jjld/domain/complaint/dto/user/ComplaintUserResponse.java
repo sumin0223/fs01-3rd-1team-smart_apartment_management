@@ -1,6 +1,5 @@
-package com.jjld.domain.complaint.dto;
+package com.jjld.domain.complaint.dto.user;
 
-import com.jjld.domain.complaint.entity.Complaint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +17,5 @@ public class ComplaintUserResponse {
     private String category;
     private String status;
     private LocalDateTime createAt;
-
 
 }

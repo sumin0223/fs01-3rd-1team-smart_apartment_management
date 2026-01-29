@@ -103,10 +103,7 @@ public class AdminServiceImpl implements AdminService {
         Admin superAdmin = adminDAO.getAdmin(adminId)
                 .orElseThrow(() -> new AdminNotFoundException());
 
-        if (
-                !(superAdmin.getAdminRole().equals(AdminRole.SUPER_ADMIN) ||
-                superAdmin.getAdminRole().equals(AdminRole.ACTING_ADMIN))
-        ) {
+        if (superAdmin.getAdminRole().equals(AdminRole.ADMIN)) {
             throw new SuperAdminOnlyException();
         }
 

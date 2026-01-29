@@ -1,4 +1,4 @@
-package com.jjld.domain.complaint.dto;
+package com.jjld.domain.complaint.dto.admin;
 
 import com.jjld.domain.complaint.entity.Complaint;
 import lombok.AllArgsConstructor;

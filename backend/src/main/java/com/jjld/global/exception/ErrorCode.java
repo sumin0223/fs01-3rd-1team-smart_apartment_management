@@ -47,6 +47,9 @@ public enum ErrorCode {
     // -------- Complaint --------
     COMPLAINT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMPLAINT_NOT_FOUND", "민원을 찾을 수 없습니다."),
 
+    // -------- Complex --------
+    APARTMENT_COMPLEX_ALREADY_EXISTS(HttpStatus.CONFLICT, "APARTMENT_COMPLEX_ALREADY_EXISTS", "이미 아파트 단지 정보가 존재합니다."),
+
     // -------- DoorGate --------
     DOOR_GATE_NOT_FOUND(HttpStatus.NOT_FOUND, "DOOR_GATE_NOT_FOUND", "공동 현관을 찾을 수 없습니다."),
 
