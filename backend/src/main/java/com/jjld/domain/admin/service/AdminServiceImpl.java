@@ -155,7 +155,6 @@ public class AdminServiceImpl implements AdminService {
         }
 
         Admin admin = adminDAO.findByAdminLoginId(loginAdminReq.getAdminLoginId()).orElse(null);
-        History history = new History();
 
         if (admin == null) {
             log.info("아이디가 존재하지 않습니다.");
@@ -163,7 +162,7 @@ public class AdminServiceImpl implements AdminService {
         }
 
         if (!encoder.matches(loginAdminReq.getAdminPass(), admin.getAdminPass())) {
-            history = History.builder()
+            History history = History.builder()
                     .admin(admin)
                     .ipAddress(ipAddress)
                     .success(false)
@@ -174,10 +173,11 @@ public class AdminServiceImpl implements AdminService {
             throw new AdminNotFoundException("아이디 또는 비밀번호가 일치하지 않습니다.");
         }
 
-        history = History.builder()
+        History history = History.builder()
                 .admin(admin)
                 .ipAddress(ipAddress)
                 .success(true)
+                .message("로그인 성공")
                 .build();
         historyDAO.createLog(history);
 
@@ -190,7 +190,12 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void initialSetupAdmin(Long adminId, SetupAdminReq setupAdminReq) {
+    public void initialSetupAdmin(Long adminId, SetupAdminReq setupAdminReq, HttpServletRequest servletRequest) {
+        // 프록시, 로드밸런서를 거치면 IP가 프록시 IP로 나올 수 있으므로 X-Forwarded-For 헤더 체크 필요
+        String ipAddress = servletRequest.getHeader("X-Forwarded-For");
+        if (ipAddress == null) {
+            ipAddress = servletRequest.getRemoteAddr();
+        }
         Admin admin = adminDAO.getAdmin(adminId)
                 .orElseThrow(() -> new AdminNotFoundException());
 
@@ -210,8 +215,36 @@ public class AdminServiceImpl implements AdminService {
         admin.setAdminEmail(setupAdminReq.getAdminEmail());
         admin.setIsFirstLogin(false);
 
-        System.out.println(admin);
+        History history = History.builder()
+                .admin(admin)
+                .ipAddress(ipAddress)
+                .success(true)
+                .message("최초 설정 성공")
+                .build();
+        historyDAO.createLog(history);
 
         adminDAO.updateAdmin(admin);
+    }
+
+    @Override
+    public void logoutAdmin(Long adminId, HttpServletRequest servletRequest) {
+        // 프록시, 로드밸런서를 거치면 IP가 프록시 IP로 나올 수 있으므로 X-Forwarded-For 헤더 체크 필요
+        String ipAddress = servletRequest.getHeader("X-Forwarded-For");
+        if (ipAddress == null) {
+            ipAddress = servletRequest.getRemoteAddr();
+        }
+        Admin admin = adminDAO.getAdmin(adminId)
+                .orElseThrow(() -> new AdminNotFoundException());
+
+        admin.setState(false);
+        adminDAO.updateAdmin(admin);
+
+        History history = History.builder()
+                .admin(admin)
+                .ipAddress(ipAddress)
+                .success(true)
+                .message("로그아웃 성공")
+                .build();
+        historyDAO.createLog(history);
     }
 }

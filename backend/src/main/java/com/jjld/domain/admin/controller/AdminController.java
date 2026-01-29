@@ -60,7 +60,8 @@ public class AdminController {
     public ResponseEntity<?> updateAdminAuthority(
             @PathVariable("adminId") Long adminId,
             @PathVariable("targetAdminId") Long targetAdminId,
-            @RequestParam AdminRole adminRole) {
+            @RequestParam AdminRole adminRole
+    ) {
         adminService.updateAdminAuthority(adminId, targetAdminId, adminRole);
         return ResponseEntity.ok(ApiResponse.success("권한 변경을 성공했습니다."));
     }
@@ -81,7 +82,6 @@ public class AdminController {
             @Valid @RequestBody LoginAdminReq loginAdminReq,
             HttpServletRequest servletRequest
     ) {
-
         LoginAdminRes response = adminService.loginAdmin(loginAdminReq, servletRequest);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
@@ -89,9 +89,19 @@ public class AdminController {
     @PostMapping("/{adminId}/initial-setup")
     public ResponseEntity<?> initialSetupAdmin(
             @PathVariable("adminId") Long adminId,
-            @Valid @RequestBody SetupAdminReq setupAdminReq
+            @Valid @RequestBody SetupAdminReq setupAdminReq,
+            HttpServletRequest servletRequest
     ) {
-        adminService.initialSetupAdmin(adminId, setupAdminReq);
-        return ResponseEntity.ok(ApiResponse.success("로그인을 성공했습니다."));
+        adminService.initialSetupAdmin(adminId, setupAdminReq, servletRequest);
+        return ResponseEntity.ok(ApiResponse.success("최초 설정을 성공했습니다."));
+    }
+
+    @PostMapping("/{adminId}/logout")
+    public ResponseEntity<?> logoutAdmin(
+            @PathVariable("adminId") Long adminId,
+            HttpServletRequest servletRequest
+    ) {
+        adminService.logoutAdmin(adminId, servletRequest);
+        return ResponseEntity.ok(ApiResponse.success("로그아웃을 성공했습니다."));
     }
 }
