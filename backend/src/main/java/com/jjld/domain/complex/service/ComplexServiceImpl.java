@@ -38,9 +38,10 @@ public class ComplexServiceImpl implements ComplexService {
 
         Complex complex = modelMapper.map(complexReq, Complex.class);
 
-        complexDAO.createComplex(complex);
+        complexDAO.updateComplex(complex);
     }
 
+    // 단지 정보 조회
     @Override
     public ComplexRes getComplex() {
         Complex complex = complexDAO.getComplex().orElse(null);
@@ -52,5 +53,26 @@ public class ComplexServiceImpl implements ComplexService {
         ComplexRes response = modelMapper.map(complex, ComplexRes.class);
 
         return response;
+    }
+
+    // 단지 정보 수정
+    @Override
+    public void updateComplex(Long adminId, ComplexReq complexReq) {
+        Complex currentComplex = complexDAO.getComplex().orElse(null);
+        if (currentComplex == null) {
+            throw new ApartmentComplexNotFoundException();
+        }
+
+        Admin admin = adminDAO.getAdmin(adminId)
+                .orElseThrow(() -> new AdminNotFoundException());
+
+        if (admin.getAdminRole().equals(AdminRole.ADMIN)) {
+            throw new SuperAdminOnlyException();
+        }
+
+        Complex complex = modelMapper.map(complexReq, Complex.class);
+        complex.setId(currentComplex.getId());
+
+        complexDAO.updateComplex(complex);
     }
 }

@@ -8,4 +8,6 @@ public interface ComplexService {
     void createComplex(Long adminId, ComplexReq complexReq);
 
     ComplexRes getComplex();
+
+    void updateComplex(Long adminId, ComplexReq complexReq);
 }

@@ -41,6 +41,7 @@ public class ComplexReq {
     @Min(value = 1, message = "최고 층 수는 1 이상이어야 합니다.")
     private Integer maxFloor;
 
+    @NotNull(message = "주차 가능 대수 설정은 필수입니다.")
     @Min(value = 0, message = "주차 가능 대수는 0 이상이어야 합니다.")
     private Integer parkingCapacity;
 }

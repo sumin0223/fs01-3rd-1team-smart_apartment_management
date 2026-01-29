@@ -12,18 +12,21 @@ import java.util.Optional;
 public class ComplexDAOImpl implements ComplexDAO {
     private final ComplexRepository complexRepository;
 
+    // 단지 정보 생성
     @Override
     public Boolean existsComplex() {
         return !complexRepository.findAll().isEmpty();
     }
 
-    @Override
-    public void createComplex(Complex complex) {
-        complexRepository.save(complex);
-    }
-
+    // 단지 정보 조회
     @Override
     public Optional<Complex> getComplex() {
         return complexRepository.findTopByOrderByIdAsc();
+    }
+
+    // 단지 정보 수정
+    @Override
+    public void updateComplex(Complex complex) {
+        complexRepository.save(complex);
     }
 }

@@ -31,4 +31,14 @@ public class ComplexController {
         ComplexRes response = complexService.getComplex();
         return ResponseEntity.ok(ApiResponse.success(response));
     }
+
+    // 단지 정보 수정
+    @PutMapping("/{adminId}")
+    public ResponseEntity<?> updateComplex(
+            @PathVariable("adminId") Long adminId,
+            @Valid @RequestBody ComplexReq complexReq
+    ) {
+        complexService.updateComplex(adminId, complexReq);
+        return ResponseEntity.ok(ApiResponse.success("단지 정보 수정을 성공했습니다."));
+    }
 }
