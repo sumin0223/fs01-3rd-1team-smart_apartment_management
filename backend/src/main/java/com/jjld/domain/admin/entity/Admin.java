@@ -37,10 +37,10 @@ public class Admin {
     private String adminEmail;  // 이메일
 
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private Boolean isFirstLogin;  // 최초 로그인 여부 (true=최초 로그인, false=최초 로그인 완료 후)
+    private Boolean isFirstLogin = true;  // 최초 로그인 여부 (true=최초 로그인, false=최초 로그인 완료 후)
 
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
-    private Boolean state;  // 로그인 상태 (true=로그인, false=로그아웃)
+    private Boolean state = false;  // 로그인 상태 (true=로그인, false=로그아웃)
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

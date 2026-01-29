@@ -85,4 +85,13 @@ public class AdminController {
         LoginAdminRes response = adminService.loginAdmin(loginAdminReq, servletRequest);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
+
+    @PostMapping("/{adminId}/initial-setup")
+    public ResponseEntity<?> initialSetupAdmin(
+            @PathVariable("adminId") Long adminId,
+            @Valid @RequestBody SetupAdminReq setupAdminReq
+    ) {
+        adminService.initialSetupAdmin(adminId, setupAdminReq);
+        return ResponseEntity.ok(ApiResponse.success("로그인을 성공했습니다."));
+    }
 }

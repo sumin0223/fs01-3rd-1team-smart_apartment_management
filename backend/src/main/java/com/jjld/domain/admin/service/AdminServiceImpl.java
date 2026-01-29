@@ -58,6 +58,7 @@ public class AdminServiceImpl implements AdminService {
         Admin admin = Admin.builder()
                 .adminLoginId(adminReq.getAdminLoginId())
                 .adminPass(encoder.encode(adminReq.getAdminPass()))
+                .isFirstLogin(true)
                 .state(false)
                 .adminRole(adminReq.getAdminRole())
                 .build();
@@ -186,5 +187,31 @@ public class AdminServiceImpl implements AdminService {
         LoginAdminRes response = modelMapper.map(admin, LoginAdminRes.class);
 
         return response;
+    }
+
+    @Override
+    public void initialSetupAdmin(Long adminId, SetupAdminReq setupAdminReq) {
+        Admin admin = adminDAO.getAdmin(adminId)
+                .orElseThrow(() -> new AdminNotFoundException());
+
+        // 입력한 새 비밀번호와 DB에 저장된 비밀번호 비교
+        if (encoder.matches(setupAdminReq.getNewPassword(), admin.getAdminPass())) {
+            throw new SameAsOldPassword();
+        }
+
+        // 새 비밀번호와 새 비밀번호 확인 비교
+        if (!setupAdminReq.getNewPassword().equals(setupAdminReq.getConfirmNewPassword())) {
+            throw new PasswordMismatchException();
+        }
+
+        admin.setAdminName(setupAdminReq.getAdminName());
+        admin.setAdminPass(encoder.encode(setupAdminReq.getNewPassword()));
+        admin.setAdminPhone(setupAdminReq.getAdminPhone());
+        admin.setAdminEmail(setupAdminReq.getAdminEmail());
+        admin.setIsFirstLogin(false);
+
+        System.out.println(admin);
+
+        adminDAO.updateAdmin(admin);
     }
 }
