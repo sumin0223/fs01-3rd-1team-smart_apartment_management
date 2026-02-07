@@ -20,4 +20,7 @@ public interface NoiseEventRepository extends JpaRepository<NoiseEvent, Long> {
 
     // 센서 기준 이벤트 조회 (통계 / 분석 용으로)
     List<NoiseEvent> findByNoiseSensor(NoiseSensor noiseSensor);
+
+    // 모든 이벤트 집계/통계용
+    List<NoiseEvent> findByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
 }

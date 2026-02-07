@@ -20,12 +20,9 @@ public class NoiseStatisticsDAOImpl implements NoiseStatisticsDAO {
     private final NoiseEventAnalysisRepository noiseEventAnalysisRepository;
     // 시간대별 소음 발생 건수
     @Override
-    public Map<Integer, Long> countNoiseEventByHour(LocalDate date) {
-        // 하루 시작/끝 시간 계산
-        LocalDateTime start = date.atStartOfDay();
-        LocalDateTime end = date.plusDays(1).atStartOfDay();
+    public Map<Integer, Long> countNoiseEventByHour(LocalDateTime start, LocalDateTime end) {
         return noiseEventRepository
-                .findByCreatedAtBetween(start, end, null) // 전체 조회
+                .findByCreatedAtBetween(start, end) // 전체 조회
                 .stream()
                 // createdAt에서 시간(hour)만 추출
                 .collect(Collectors.groupingBy(
@@ -35,18 +32,11 @@ public class NoiseStatisticsDAOImpl implements NoiseStatisticsDAO {
     }
     // 시간대별 정책 위반 건수
     @Override
-    public Map<Integer, Long> countPolicyBreakByHour(LocalDate date) {
-        LocalDateTime start = date.atStartOfDay();
-        LocalDateTime end = date.plusDays(1).atStartOfDay();
+    public Map<Integer, Long> countPolicyBreakByHour(LocalDateTime start, LocalDateTime end) {
         return noiseEventAnalysisRepository
-                .findAll()
+                .findByCreatedAtBetween(start, end)
                 .stream()
-                // 날짜 필터
-                .filter(analysis ->
-                        !analysis.getCreatedAt().isBefore(start)
-                                && analysis.getCreatedAt().isBefore(end)
-                                && analysis.getPolicyBreak()
-                )
+                .filter(NoiseEventAnalysis::getPolicyBreak)
                 .collect(Collectors.groupingBy(
                         analysis -> analysis.getCreatedAt().getHour(),
                         Collectors.counting()
@@ -54,11 +44,9 @@ public class NoiseStatisticsDAOImpl implements NoiseStatisticsDAO {
     }
     // 센서 신호 유형 분포(원그래프
     @Override
-    public Map<SensorType, Long> countSensorType(LocalDate date) {
-        LocalDateTime start = date.atStartOfDay();
-        LocalDateTime end = date.plusDays(1).atStartOfDay();
+    public Map<SensorType, Long> countSensorType(LocalDateTime start, LocalDateTime end) {
         return noiseEventRepository
-                .findByCreatedAtBetween(start, end, null)
+                .findByCreatedAtBetween(start, end)
                 .stream()
                 .collect(Collectors.groupingBy(
                         event -> event.getNoiseSensor().getSensorType(),
@@ -67,17 +55,10 @@ public class NoiseStatisticsDAOImpl implements NoiseStatisticsDAO {
     }
     // 소음 패턴 발생빈도(레이더차트
     @Override
-    public Map<NoisePattern1, Long> countNoisePattern(LocalDate date) {
-        LocalDateTime start = date.atStartOfDay();
-        LocalDateTime end = date.plusDays(1).atStartOfDay();
+    public Map<NoisePattern1, Long> countNoisePattern(LocalDateTime start, LocalDateTime end) {
         return noiseEventAnalysisRepository
-                .findAll()
+                .findByCreatedAtBetween(start, end)
                 .stream()
-                // 날짜 필터
-                .filter(analysis ->
-                        !analysis.getCreatedAt().isBefore(start)
-                                && analysis.getCreatedAt().isBefore(end)
-                )
                 .collect(Collectors.groupingBy(
                         NoiseEventAnalysis::getNoisePattern1,
                         Collectors.counting()

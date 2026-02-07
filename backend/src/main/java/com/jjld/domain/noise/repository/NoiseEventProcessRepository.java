@@ -27,4 +27,6 @@ public interface NoiseEventProcessRepository extends JpaRepository<NoiseEventPro
 
     // 즉시 처리 필요 + 승인 대기 목록
     Page<NoiseEventProcess> findByUrgentBreakTrueAndStatus(ProcessStatus status, Pageable pageable);
+
+    Optional<NoiseEventProcess> findByNoiseEvent_NoiseEventId(Long noiseEventId);
 }

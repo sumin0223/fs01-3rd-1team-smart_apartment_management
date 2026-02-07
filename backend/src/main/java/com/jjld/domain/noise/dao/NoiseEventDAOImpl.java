@@ -27,27 +27,22 @@ public class NoiseEventDAOImpl implements NoiseEventDAO {
     // 상태별 소음 이벤트(전체.승인ㄴ필요.처리완료 필터)
     @Override
     public Page<NoiseEventProcess> findNoiseEventByStatus(ProcessStatus status, Pageable pageable) {
-        // 전체 목록 조회
-        if (status == null) {
-            return noiseEventProcessRepository.findAll(pageable);
-        }
         // 상태별 목록 조회
         return noiseEventProcessRepository.findByStatus(status, pageable);
     }
     // 이벤트 상세 조회(상세화면에서 보는 정보 기준- NoiseEvent>NoiseEventProcess 연결)
     @Override
     public NoiseEventProcess findNoiseEventDetail(Long noiseEventId) {
-        // 1. 소음 이벤트 조회
-        NoiseEvent noiseEvent = noiseEventRepository
-                .findById(noiseEventId)
-                .orElseThrow(() ->
-                        new IllegalArgumentException("존재하지 않는 소음 이벤트입니다.")
-                );
-        // 2. 이벤트 처리 정보 조회
+        // 이벤트 처리 정보 조회
         return noiseEventProcessRepository
-                .findByNoiseEvent(noiseEvent)
+                .findByNoiseEvent_NoiseEventId(noiseEventId)
                 .orElseThrow(() ->
-                        new IllegalArgumentException("소음 이벤트 처리 정보가 존재하지 않습니다.")
+                        new IllegalArgumentException("소음 이벤트 처리 정보가 존재하지 않습니다. (id = " + noiseEventId)
                 );
+    }
+    // 전체 소음 이벤트목록 조회
+    @Override
+    public Page<NoiseEventProcess> findAllNoiseEvent(Pageable pageable) {
+        return noiseEventProcessRepository.findAll(pageable);
     }
 }

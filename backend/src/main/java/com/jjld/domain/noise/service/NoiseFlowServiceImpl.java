@@ -1,14 +1,9 @@
 package com.jjld.domain.noise.service;
 
+import com.jjld.domain.house.entity.House;
+import com.jjld.domain.noise.entity.*;
 import com.jjld.domain.noise.entity.Enum.ProcessStatus;
-import com.jjld.domain.noise.entity.NoiseEvent;
-import com.jjld.domain.noise.entity.NoiseEventAnalysis;
-import com.jjld.domain.noise.entity.NoiseEventProcess;
-import com.jjld.domain.noise.entity.NoiseSensor;
-import com.jjld.domain.noise.repository.NoiseEventAnalysisRepository;
-import com.jjld.domain.noise.repository.NoiseEventProcessRepository;
-import com.jjld.domain.noise.repository.NoiseEventRepository;
-import com.jjld.domain.noise.repository.NoiseSensorRepository;
+import com.jjld.domain.noise.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,19 +17,26 @@ public class NoiseFlowServiceImpl implements NoiseFlowService {
     private final NoiseEventProcessRepository noiseEventProcessRepository;
     private final NoiseSensorRepository noiseSensorRepository;
     private final NoiseEventRepository noiseEventRepository;
+    private final NoisePolicyRepository noisePolicyRepository;
 
     // 소음 이벤트 처리 흐름
     @Override
     public void handleNoiseEvent(NoiseEvent noiseEvent) {
+        // 활성 정책 조회 (반드시 1개여야 함)
+        NoisePolicy policy = noisePolicyRepository.findByIsActiveTrue()
+                .orElseThrow(() ->
+                        new IllegalStateException("활성화된 소음 정책이 존재하지 않습니다.")
+                );
         // 1. 반복횟수계산 - 같은센서/정책 시간/발생이벤트 수 기준
         int repeatCount = 1;
         // 2. 정책 기준으로 소음 분석
         NoiseEventAnalysis analysis = noiseViolationService.analyzeNoiseEvent(noiseEvent, repeatCount);
-        // 3. 분석결과저장
+        // 3. 분석 결과 저장
         noiseEventAnalysisRepository.save(analysis);
-        // 4. Process 객체 생성
+        // 6. Process 객체 생성
         NoiseEventProcess process = NoiseEventProcess.builder()
                 .noiseEvent(noiseEvent)
+                .noisePolicy(policy)
                 .status(ProcessStatus.PENDING)
                 .urgentBreak(analysis.getPolicyBreak())
                 .build();

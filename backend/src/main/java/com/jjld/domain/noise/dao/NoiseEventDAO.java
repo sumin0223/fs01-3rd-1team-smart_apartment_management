@@ -16,10 +16,13 @@ public interface NoiseEventDAO {
     // @param pageable 페이지 정보
     Page<NoiseEventProcess> findNoiseEventByStatus(
             ProcessStatus status,
-            Pageable pageable
-    );
+            Pageable pageable);
 
     // 소음 이벤트 단건 상세 조회
     // @param noiseEventId 소음 이벤트 ID
     NoiseEventProcess findNoiseEventDetail(Long noiseEventId);
+
+    // 전체 소음 이벤트 목록 조회 (상태 무관)
+    Page<NoiseEventProcess> findAllNoiseEvent(Pageable pageable);
+
 }
