@@ -12,4 +12,6 @@ public interface HouseRepository extends JpaRepository<House, Long>, JpaSpecific
 
     House findByHouseIdAndHouseholderEmail(Long houseId, String householderEmail);
 
+    // 세대 조회
+    House findByHouseDongAndHouseHo(Integer houseDong, Integer houseHo);
 }

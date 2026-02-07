@@ -3,16 +3,15 @@ package com.jjld.domain.entrancedoor.controller;
 import com.jjld.domain.entrancedoor.dto.EntranceGateLogResponse;
 import com.jjld.domain.entrancedoor.dto.EntranceGateLogSearchCond;
 import com.jjld.domain.entrancedoor.dto.EntranceGateResponse;
+import com.jjld.domain.entrancedoor.dto.GateAuthTEstRequest;
+import com.jjld.domain.entrancedoor.entity.EntranceOpenRequest;
 import com.jjld.domain.entrancedoor.service.EntranceDoorService;
 import com.jjld.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -42,5 +41,18 @@ public class EntranceController {
             @RequestParam(defaultValue = "10") int size
     ){
         return service.search(cond, page, size);
+    }
+
+    // 출입 인증 테스트
+    @PostMapping("/auth")
+    @Operation(summary = "공동현관 출입 인증 테스트")
+    public ResponseEntity<?> gateTest(
+            @RequestBody GateAuthTEstRequest request
+            ){
+        boolean result = service.authenticateTest(request);
+
+        return ResponseEntity.ok(
+                ApiResponse.success(result)
+        );
     }
 }

@@ -1,15 +1,15 @@
 package com.jjld.domain.entrancedoor.entity;
 
+import com.jjld.domain.admin.entity.Admin;
+import com.jjld.domain.entrancedoor.entity.Enum.DoorCallStatus;
+import com.jjld.domain.house.entity.House;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -19,13 +19,19 @@ public class EntranceOpenRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long requestId;
 
-    @Column(nullable = false)
-    private Integer houseDong;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "house_id")
+    private House house;
 
     @Column(nullable = false)
     private LocalDateTime requestedAt;
 
-    private Boolean processed;
+    @Enumerated(EnumType.STRING)
+    private DoorCallStatus status;
 
     private LocalDateTime processedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "admin_id")
+    private Admin admin;
 }
