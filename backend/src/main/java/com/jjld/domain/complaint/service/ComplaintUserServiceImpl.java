@@ -5,6 +5,8 @@ import com.jjld.domain.complaint.dto.user.*;
 import com.jjld.domain.complaint.entity.Complaint;
 import com.jjld.domain.complaint.entity.Enum.ComplaintCategory;
 import com.jjld.domain.complaint.entity.Enum.ComplaintStatus;
+import com.jjld.domain.complaint.entity.Enum.SummaryStatus;
+import com.jjld.domain.complaint.repository.ComplaintAnalysisRepository;
 import com.jjld.domain.complaint.repository.ComplaintRepository;
 import com.jjld.domain.house.dto.login.AccountUserDetail;
 import com.jjld.domain.house.entity.Account;
@@ -33,6 +35,7 @@ public class ComplaintUserServiceImpl implements ComplaintUserService{
     private final ModelMapper modelMapper;
     private final HouseRepository houseRepository;
     private final AccountRepository accountRepository;
+    private final ComplaintAnalysisRepository complaintAnalysisRepository;
 
 
     // 세대별 작성한 민원 목록 조회
@@ -143,7 +146,7 @@ public class ComplaintUserServiceImpl implements ComplaintUserService{
                     if(complaint == null){
                         throw new NotFoundException(ErrorCode.COMPLAINT_NOT_FOUND, "참조할 민원이 없습니다.");
                     }
-                        return complaint;
+                    return complaint;
                 })
                 .collect(Collectors.toList());
 
@@ -152,6 +155,7 @@ public class ComplaintUserServiceImpl implements ComplaintUserService{
                 .category(ComplaintCategory.valueOf((userWrite.getCategory())))
                 .content(userWrite.getContent())
                 .referenceComplaints(reference)
+                .summaryStatus(SummaryStatus.WAITING)
                 .status(ComplaintStatus.WAITING)
                 .householderEmail(email)
                 .house(house)
@@ -192,19 +196,19 @@ public class ComplaintUserServiceImpl implements ComplaintUserService{
     // 민원 수정
     @Override
     public void updateComplaint(Long houseId, Long complaintId, String householderEmail, ComplaintUserUpdate complaintUserUpdate) {
-    Complaint complaint = complaintRepository
-            .findByComplaintIdAndHouse_HouseIdAndHouseholderEmail(complaintId, houseId, householderEmail);
-    if(complaint == null){
-        throw new NotFoundException(ErrorCode.COMPLAINT_NOT_FOUND, "수정하려는 민원글을 찾을 수 없습니다.");
-    }
+        Complaint complaint = complaintRepository
+                .findByComplaintIdAndHouse_HouseIdAndHouseholderEmail(complaintId, houseId, householderEmail);
+        if(complaint == null){
+            throw new NotFoundException(ErrorCode.COMPLAINT_NOT_FOUND, "수정하려는 민원글을 찾을 수 없습니다.");
+        }
 
-    if(complaint.getComplaintReply() != null){
-        throw new NotFoundException(ErrorCode.COMPLAINT_ALREADY_ANSWER, "답변이 달린 민원은 수정할 수 없습니다");
-    }
-    complaint.setTitle(complaintUserUpdate.getTitle());
-    complaint.setCategory(ComplaintCategory.valueOf(complaintUserUpdate.getCategory()));
-    complaint.setContent(complaintUserUpdate.getContent());
-    complaint.setUpdatedAt(LocalDateTime.now());
+        if(complaint.getComplaintReply() != null){
+            throw new NotFoundException(ErrorCode.COMPLAINT_ALREADY_ANSWER, "답변이 달린 민원은 수정할 수 없습니다");
+        }
+        complaint.setTitle(complaintUserUpdate.getTitle());
+        complaint.setCategory(ComplaintCategory.valueOf(complaintUserUpdate.getCategory()));
+        complaint.setContent(complaintUserUpdate.getContent());
+        complaint.setUpdatedAt(LocalDateTime.now());
 
         if (complaintUserUpdate.getReferenceId() != null) {
             List<Complaint> references = complaintUserUpdate.getReferenceId().stream()
@@ -221,6 +225,12 @@ public class ComplaintUserServiceImpl implements ComplaintUserService{
             complaint.setReferenceComplaints(references);
         }
 
-    complaintDAO.update(complaint);
+        // 기존 요약 삭제
+        complaintAnalysisRepository.deleteByComplaint_ComplaintId(complaintId);
+
+        // 요약 상태 재설정
+        complaint.updateContent(complaintUserUpdate.getContent());
+
+        complaintDAO.update(complaint);
     }
 }

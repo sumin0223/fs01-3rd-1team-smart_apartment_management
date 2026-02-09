@@ -1,6 +1,8 @@
 package com.jjld.domain.complaint.repository;
 
 import com.jjld.domain.complaint.entity.Complaint;
+import com.jjld.domain.complaint.entity.ComplaintAnalysis;
+import com.jjld.domain.complaint.entity.Enum.SummaryStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,5 +32,8 @@ public interface ComplaintRepository extends JpaRepository<Complaint, Long>, Jpa
     // 삭제 대상 complaint를 참조하는 모든 complaint를 조회
     List<Complaint> findAllByReferenceComplaintsContainsAndHouse_HouseIdAndHouseholderEmail(Complaint complaint, Long houseId, String email);
     void deleteByComplaintIdAndHouse_HouseIdAndHouseholderEmail(Long complaint, Long houseId, String email);
+
+    // 요약 대기 상태 민원만 조회
+    List<Complaint> findBySummaryStatus(SummaryStatus status);
 
 }

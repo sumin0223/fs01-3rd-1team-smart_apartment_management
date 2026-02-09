@@ -24,4 +24,6 @@ public interface ComplaintAdminService {
     // 관리자의 민원 답변 작성
     void answerWrite(Long complaintId, Long adminId, ComplaintAdminAnswerResponse answerResponse);
 
+    // 관리자가 조회할 민원 요약 저장
+    void runSummaryBatch();
 }

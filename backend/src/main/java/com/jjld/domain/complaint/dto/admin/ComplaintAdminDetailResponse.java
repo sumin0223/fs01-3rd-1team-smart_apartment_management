@@ -20,6 +20,7 @@ public class ComplaintAdminDetailResponse {
     private LocalDateTime createAt;
     private LocalDateTime replyAt;
     private String content;
+    private String summaryStatus;
     private String summary;
     private String answer;
     private String adminName;

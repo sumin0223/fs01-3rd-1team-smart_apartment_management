@@ -3,10 +3,7 @@ package com.jjld.domain.complaint.entity;
 
 import com.jjld.domain.complaint.entity.Enum.AnalysisPeriodType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
@@ -14,6 +11,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -53,4 +51,8 @@ public class ComplaintAnalysis {
     @Column(nullable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
+
+    public void updateSummary(String summary){
+        this.summary = summary;
+    }
 }

@@ -21,6 +21,7 @@ public class ComplaintAdminResponse {
     private LocalDateTime createAt;
     private String status;
 
+
     public ComplaintAdminResponse(Complaint complaint) {
         this.complaintId = complaint.getComplaintId();
         this.title = complaint.getTitle();
