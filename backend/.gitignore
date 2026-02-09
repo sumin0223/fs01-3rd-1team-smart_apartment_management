@@ -4,6 +4,10 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+target/
+
+### log 파일 제외 ###
+*.log
 
 ### STS ###
 .apt_generated
@@ -39,3 +43,11 @@ out/
 
 
 .DS_Store
+
+### Python 캐시 및 가상환경 제외 ###
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
